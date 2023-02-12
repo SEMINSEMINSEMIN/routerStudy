@@ -7,7 +7,7 @@ export default class extends AbstractView {
         this.setTitle("Dashboard");
     }
 
-    async getHTML() {
+    getHTML() {
         return `
             <h1>Welcome back, Dom</h1>
             <p>

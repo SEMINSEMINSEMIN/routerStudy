@@ -7,7 +7,7 @@ export default class extends AbstractView {
         this.setTitle("Posts");
     }
 
-    async getHTML() {
+    getHTML() {
         return `
             <h1>Posts</h1>
             <p>You are viewing the posts!</p>

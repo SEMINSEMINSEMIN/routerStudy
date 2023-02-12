@@ -8,7 +8,7 @@ export default class extends AbstractView {
         this.setTitle("Viewing Post");
     }
 
-    async getHTML() {
+    getHTML() {
         console.log(this.params.id);
         return `
             <h1>Posts</h1>
