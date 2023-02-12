@@ -1,7 +1,8 @@
-import Dashboard from "./views/Dashboard.js";
-import Posts from "./views/Posts.js";
-import PostView from "./views/PostView.js";
-import Settings from "./views/Settings.js";
+const modules = {};
+
+const load = async (file) => {
+    modules[file] = await import(`./views/${file}.js`);
+};
 
 const pathToRegex = (path) =>
     new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
@@ -25,48 +26,49 @@ const navigateTo = (url) => {
     router();
 };
 
-const router = () => {
-    new Promise((resolve, _) => {
-        document.getElementById("loading").style.cssText = "display: block";
-        console.log(document.getElementById("loading").style.display);
+// 모듈을 로딩하기 전까지 안 보여주기
+const router = async () => {
+    const $app = document.querySelector("#app");
+    const $loading = document.getElementById("loading");
 
-        const routes = [
-            { path: "/", view: Dashboard },
-            { path: "/posts", view: Posts },
-            { path: "/posts/:id", view: PostView },
-            { path: "/settings", view: Settings },
-        ];
+    const routes = [
+        { path: "/", view: "Dashboard" },
+        { path: "/posts", view: "Posts" },
+        { path: "/posts/:id", view: "PostView" },
+        { path: "/settings", view: "Settings" },
+    ];
 
-        const potentialMatches = routes.map((route) => {
-            return {
-                route: route,
-                result: location.pathname.match(pathToRegex(route.path)),
-            };
-        });
-
-        let match = potentialMatches.find(
-            (potentialMatches) => potentialMatches.result !== null
-        );
-
-        if (!match) {
-            match = {
-                route: routes[0],
-                result: [location.pathname],
-            };
-
-            // console.log(getParams(match));
-            // 빈 객체
-        }
-
-        const view = new match.route.view(getParams(match));
-        setTimeout(() => {
-            document.querySelector("#app").innerHTML = view.getHTML();
-            resolve();
-        }, 3000);
-    }).then(() => {
-        document.getElementById("loading").style.cssText = "display: none";
-        console.log(document.getElementById("loading").style.display);
+    const potentialMatches = routes.map((route) => {
+        return {
+            route: route,
+            result: location.pathname.match(pathToRegex(route.path)),
+        };
     });
+
+    let match = potentialMatches.find(
+        (potentialMatches) => potentialMatches.result !== null
+    );
+
+    if (!match) {
+        match = {
+            route: routes[0],
+            result: [location.pathname],
+        };
+
+        // console.log(getParams(match));
+        // 빈 객체
+    }
+
+    const view = match.route.view;
+
+    if (!modules[view]) {
+        $loading.style.cssText = "display: block";
+        await load(view);
+    }
+
+    const viewRender = new modules[view].default;
+    $app.innerHTML = viewRender.getHTML();
+    if ($loading.style.display === "block") $loading.style.cssText = "display: none";
 };
 
 // 뒤로 가기, 앞으로 가기 등에서도 router가 작동하도록 하기 위해
