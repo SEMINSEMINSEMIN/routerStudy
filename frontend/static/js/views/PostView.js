@@ -9,10 +9,11 @@ export default class PostView extends AbstractView {
     }
 
     getHTML() {
-        console.log(this.params.id);
         return `
-            <h1>Posts</h1>
-            <p>You are viewing post ${this.postId}</p>
+        <main-content>
+            <h1 slot="heading">Post ${this.postId}</h1>
+            <p slot="contents">You are viewing post ${this.postId}</p>
+        </main-content>
         `;
     }
 }

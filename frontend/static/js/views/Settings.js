@@ -9,8 +9,10 @@ export default class Settings extends AbstractView {
 
     getHTML() {
         return `
-            <h1>Settings</h1>
-            <p>You are viewing the settings!</p>
+        <main-content>
+            <h1 slot="heading">Settings</h1>
+            <p slot="contents">You are viewing the settings!</p>
+        </main-content>
         `;
     }
 }

@@ -66,7 +66,7 @@ const router = async () => {
         await load(view);
     }
 
-    const viewRender = new modules[view].default;
+    const viewRender = new modules[view].default(getParams(match));
     $app.innerHTML = viewRender.getHTML();
     if ($loading.style.display === "block") $loading.style.cssText = "display: none";
 };

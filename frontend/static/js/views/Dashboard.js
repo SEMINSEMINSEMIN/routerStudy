@@ -9,13 +9,11 @@ export default class Dashboard extends AbstractView {
 
     getHTML() {
         return `
-            <h1>Welcome back, Dom</h1>
-            <p>
-                blah blah blah
-            </p>
-            <p>
-                <a href="/posts" data-link>View recent posts</a>
-            </p>
+        <main-content>
+            <h1 slot="heading">Dashboard</h1>
+            <p slot="contents">This is Dashboard</p>
+            <a href="/posts" slot="contents" data-link>View recent posts</a>
+        </main-content>
         `;
     }
 }
